@@ -1,52 +1,68 @@
-ZendSkeletonApplication
+Navigation mit Zend Framework 2
 =======================
 
-Introduction
+Einleitung
 ------------
-This is a simple, skeleton application using the ZF2 MVC layer and module
-systems. This application is meant to be used as a starting place for those
-looking to get their feet wet with ZF2.
+Dies ist eine einfache Applikation, welche die Verwendung von Zend/Navigation
+darstellt. Die Menüpunkte werden in diesem Beispiel aus einer mySQL Datenbank
+geladen. 
 
 
 Installation
 ------------
 
-Using Composer (recommended)
-----------------------------
-The recommended way to get a working copy of this project is to clone the repository
-and use `composer` to install dependencies using the `create-project` command:
+Downloaden und entpacken.
 
-    curl -s https://getcomposer.org/installer | php --
-    php composer.phar create-project -sdev --repository-url="http://packages.zendframework.com" zendframework/skeleton-application path/to/install
+Datenbank
+------------
+Erstelle eine Tabelle mit dem Namen zf2navigation
 
-Alternately, clone the repository and manually invoke `composer` using the shipped
-`composer.phar`:
+Hier der Datenbankdump mit ein paar Testdaten:
 
-    cd my/project/dir
-    git clone git://github.com/zendframework/ZendSkeletonApplication.git
-    cd ZendSkeletonApplication
-    php composer.phar self-update
-    php composer.phar install
+CREATE TABLE IF NOT EXISTS `menu` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `assignto` int(2) NOT NULL DEFAULT '0',
+  `name` varchar(40) NOT NULL,
+  `link` varchar(40) NOT NULL,
+  `pos` int(2) NOT NULL DEFAULT '0',
+  `auth` int(1) NOT NULL,
+  `type` varchar(20) NOT NULL DEFAULT 'main',
+  `show` int(1) NOT NULL DEFAULT '1',
+  `active` int(1) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
 
-(The `self-update` directive is to ensure you have an up-to-date `composer.phar`
-available.)
+--
+-- Daten für Tabelle `menu`
+--
 
-Another alternative for downloading the project is to grab it via `curl`, and
-then pass it to `tar`:
+INSERT INTO `menu` (`id`, `assignto`, `name`, `link`, `pos`, `auth`, `type`, `show`, `active`) VALUES
+(1, 0, 'Home', '/', 1, 0, 'main', 1, 1),
+(2, 0, 'Menüpunkt 1', '/menue-one', 2, 0, 'main', 1, 1),
+(3, 0, 'Menüpunkt 2', '/menue-two', 3, 0, 'main', 1, 1),
+(4, 0, 'Topmenü 1', '/topmenue-one', 1, 0, 'top', 1, 1),
+(5, 0, 'Topmenü 2', '/topmenue-two', 2, 0, 'top', 1, 1),
+(6, 2, 'Submenü 1', '/submenue-one', 1, 0, 'main', 1, 1),
+(7, 2, 'Submenü 2', '/submenue-two', 2, 0, 'main', 1, 1);
 
-    cd my/project/dir
-    curl -#L https://github.com/zendframework/ZendSkeletonApplication/tarball/master | tar xz --strip-components=1
-
-You would then invoke `composer` to install dependencies per the previous
-example.
-
-Using Git submodules
---------------------
-Alternatively, you can install using native git submodules:
-
-    git clone git://github.com/zendframework/ZendSkeletonApplication.git --recursive
 
 Virtual Host
 ------------
-Afterwards, set up a virtual host to point to the public/ directory of the
-project and you should be ready to go!
+Erstelle einen virtuellen Host, der auf das public/ Verzeichnis verweist.
+
+Beispiel:
+
+#testzf2navigation.dev
+<VirtualHost *:80>
+    DocumentRoot "/usr/local/zend/apache2/htdocs/test-zf2-navigation-v1/public"
+    ServerAdmin info@dhe.de
+    ServerName testzf2navigationv1.dev
+	SetEnv APPLICATION_ENV "development"
+    <Directory "/usr/local/zend/apache2/htdocs/test-zf2-navigation-v1/public">
+        Options Indexes FollowSymLinks
+        AllowOverride all
+        Order Deny,Allow
+        Deny from all
+        Allow from 127.0.0.1
+    </Directory>
+</VirtualHost>
