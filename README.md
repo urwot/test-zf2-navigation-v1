@@ -26,7 +26,6 @@ Erstelle einen virtuellen Host, der auf das public/ Verzeichnis verweist.
 
 Beispiel:
 
-#testzf2navigation.dev
 <VirtualHost *:80>
     DocumentRoot "/usr/local/zend/apache2/htdocs/test-zf2-navigation-v1/public"
     ServerAdmin info@dhe.de
